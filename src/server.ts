@@ -6,6 +6,7 @@ import compression from 'compression';
 import cors from 'cors';
 
 import indexRouter from './routes/indexRouter';
+import postRouter from './routes/postsRouter';
 
 class Server {
     public app: express.Application;
@@ -37,6 +38,7 @@ class Server {
 
     routes(){
         this.app.use(indexRouter);
+        this.app.use('/api', postRouter);
     }
 
     start(){

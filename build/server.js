@@ -10,6 +10,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const compression_1 = __importDefault(require("compression"));
 const cors_1 = __importDefault(require("cors"));
 const indexRouter_1 = __importDefault(require("./routes/indexRouter"));
+const postsRouter_1 = __importDefault(require("./routes/postsRouter"));
 class Server {
     constructor() {
         this.app = express_1.default();
@@ -36,6 +37,7 @@ class Server {
     }
     routes() {
         this.app.use(indexRouter_1.default);
+        this.app.use('/api', postsRouter_1.default);
     }
     start() {
         this.app.listen(this.app.get('port'), () => {
