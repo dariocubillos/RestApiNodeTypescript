@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const auth_1 = require("../middlewares/auth");
 const Post_1 = __importDefault(require("../models/Post"));
 class PostRouter {
     constructor() {
@@ -55,7 +56,7 @@ class PostRouter {
         });
     }
     routes() {
-        this.router.get('/posts', this.getPosts);
+        this.router.get('/posts', [auth_1.auth], this.getPosts);
         this.router.get('/post/:slug', this.getPost);
         this.router.post('/posts', this.createPost);
         this.router.patch('/post/:slug', this.updatePost);

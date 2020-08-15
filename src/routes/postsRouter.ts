@@ -1,4 +1,5 @@
 import { Request, Response, Router } from 'express';
+import { auth } from "../middlewares/auth";
 import Post from '../models/Post';
 
 class PostRouter {
@@ -40,7 +41,7 @@ class PostRouter {
     }
 
     routes() {
-        this.router.get('/posts', this.getPosts);
+        this.router.get('/posts', [auth], this.getPosts);
         this.router.get('/post/:slug', this.getPost);
         this.router.post('/posts', this.createPost);
         this.router.patch('/post/:slug', this.updatePost);
