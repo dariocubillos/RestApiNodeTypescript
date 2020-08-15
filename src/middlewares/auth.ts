@@ -8,17 +8,13 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
     const token = <string>req.headers["auth"];
     let jwtPayload;
 
-    if (!token)
-    return res.status(401).json({ msg: 'Sin token, no tienes autorización' });
-
     //Try to validate the token and get data
     try {
         jwtPayload = <any>jwt.verify(token, config.jwtSecret);
         res.locals.jwtPayload = jwtPayload;
     } catch (error) {
         //If token is not valid, respond with 401 (unauthorized)
-        res.status(401).send();
-        return;
+        return res.status(401).json({ msg: 'Sin token, no tienes autorización' });
     }
 
     //The token is valid for 1 hour
