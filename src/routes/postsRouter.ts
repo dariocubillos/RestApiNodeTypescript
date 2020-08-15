@@ -1,4 +1,5 @@
 import { Request, Response, Router } from 'express';
+import Post from '../models/Post';
 
 class PostRouter {
     router: Router;
@@ -8,8 +9,9 @@ class PostRouter {
         this.routes();
     }
 
-    getPosts(req: Request, res: Response) {
-        res.send('posts')
+    async getPosts(req: Request, res: Response) {
+        const posts = await Post.find()
+        res.json({ 'posts': posts })
     }
 
     getPost() {
@@ -30,9 +32,10 @@ class PostRouter {
 
     routes() {
         this.router.get('/posts', this.getPosts);
-        this.router.post('/posts', this.getPosts);
-        this.router.get('/posts', this.getPosts);
-        this.router.put('/posts', this.getPosts);
+        this.router.get('/post/:slug', this.getPost);
+        this.router.post('/posts', this.createPost);
+        this.router.patch('/post/:slug', this.updatePost);
+        this.router.delete('/posts/slug', this.deletePost);
     }
 }
 
