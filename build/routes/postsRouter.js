@@ -22,16 +22,37 @@ class PostRouter {
     getPosts(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             const posts = yield Post_1.default.find();
-            res.json({ 'posts': posts });
+            res.json(posts);
         });
     }
-    getPost() {
+    getPost(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const post = yield Post_1.default.findOne({ slug: req.params.url });
+            res.json(post);
+        });
     }
-    createPost() {
+    createPost(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { title, slug, content, imageUrl } = req.body;
+            const newPost = new Post_1.default({ title, slug, content, imageUrl });
+            yield newPost.save();
+            res.json({ data: newPost });
+        });
     }
-    updatePost() {
+    updatePost(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { slug } = req.params;
+            const post = yield Post_1.default.findOneAndUpdate({ slug }, req.body, { new: true });
+        });
     }
-    deletePost() {
+    deletePost(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { slug } = req.params;
+            yield Post_1.default.findOneAndDelete({ slug });
+            res.json({
+                res: 'Post deleted'
+            });
+        });
     }
     routes() {
         this.router.get('/posts', this.getPosts);

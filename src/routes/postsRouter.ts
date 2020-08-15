@@ -11,23 +11,32 @@ class PostRouter {
 
     async getPosts(req: Request, res: Response) {
         const posts = await Post.find()
-        res.json({ 'posts': posts })
+        res.json(posts)
     }
 
-    getPost() {
-
+    async getPost(req: Request, res: Response) {
+        const post = await Post.findOne({ slug: req.params.url });
+        res.json(post)
     }
 
-    createPost() {
-
+    async createPost(req: Request, res: Response) {
+        const { title, slug, content, imageUrl } = req.body
+        const newPost = new Post({ title, slug, content, imageUrl });
+        await newPost.save();
+        res.json({ data: newPost })
     }
 
-    updatePost() {
-
+    async updatePost(req: Request, res: Response) {
+        const { slug } = req.params
+        const post = await Post.findOneAndUpdate({ slug }, req.body, { new: true })
     }
 
-    deletePost() {
-
+    async deletePost(req: Request, res: Response) {
+        const { slug } = req.params
+        await Post.findOneAndDelete({slug})
+        res.json({
+            res: 'Post deleted'
+        }) 
     }
 
     routes() {
