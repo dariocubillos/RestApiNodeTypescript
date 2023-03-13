@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig, AxiosPromise } from 'axios';
 import { Request, Response, Router } from 'express';
 import { environment } from '../environments/environment';
 import { auth } from "../middlewares/auth";
+import { Foo } from '../models/cronJobs';
 import Post from '../models/Post';
 import { ProductMercadoLibre } from '../models/product-mercado-libre';
 
@@ -44,6 +45,8 @@ class PostRouter {
     }
 
     async createSearch(req: Request, res: Response){
+        const foo = new Foo('* * * * *');
+        // TODO: pending to add system of stop by databases post check if need to stop
         const { productQuery} = req.body;           
         axios.get<ProductMercadoLibre>(`${environment.mercadoLibreAPI}/sites/${environment.mercadoLibreSite}/search?q=${productQuery}`, { headers: {
             'Content-Type': 'application/json',
