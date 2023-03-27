@@ -6,7 +6,7 @@ import cors from 'cors';
 import mongoose, { ConnectOptions } from "mongoose";
 
 import indexRouter from './routes/indexRouter';
-import postRouter from './routes/postsRouter';
+import searchRouter from './routes/searchRouter';
 
 class Server {
     public app: express.Application;
@@ -36,7 +36,7 @@ class Server {
 
     routes(){
         this.app.use(indexRouter);
-        this.app.use('/api', postRouter);
+        this.app.use('/api', searchRouter);
     }
 
     start(){
