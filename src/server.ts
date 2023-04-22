@@ -7,6 +7,7 @@ import mongoose, { ConnectOptions } from "mongoose";
 
 import indexRouter from './routes/indexRouter';
 import searchRouter from './routes/searchRouter';
+import { QueryListDb } from './models/cronJobs';
 
 class Server {
     public app: express.Application;
@@ -32,6 +33,9 @@ class Server {
         this.app.use(helmet());
         this.app.use(compression());
         this.app.use(cors());
+
+        const foo = new QueryListDb('* * * * *');
+
     }
 
     routes(){
@@ -42,7 +46,7 @@ class Server {
     start(){
         this.app.listen(this.app.get('port'), () => {
             console.log('server on port', this.app.get('port'));
-        })
+        });
     }
 }
 

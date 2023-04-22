@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Request, Response, Router } from 'express';
 import { environment } from '../environments/environment';
-import { Foo } from '../models/cronJobs';
 import Search from '../models/Search';
 import { ProductMercadoLibre } from '../models/product-mercado-libre';
 
@@ -26,14 +25,13 @@ class SearchRouter {
     }
 
     async createSearch(req: Request, res: Response) {        
-        const { title, slug, productUrl, imageUrl } = req.body;
-        const newsearch = new Search({ title, slug, productUrl, imageUrl });
+        const { title, slug, productString, frequency } = req.body;
+        const newsearch = new Search({ title, slug, productString, frequency });
         await newsearch.save();
         res.json({ data: newsearch })
     }
 
     async executeSearch(req: Request, res: Response){
-        const foo = new Foo('* * * * *');
         // TODO: pending to add system of stop by databases search check if need to stop
         const { productQuery} = req.body;           
         axios.get<ProductMercadoLibre>(`${environment.mercadoLibreAPI}/sites/${environment.mercadoLibreSite}/search?q=${productQuery}`, { headers: {
@@ -46,6 +44,7 @@ class SearchRouter {
 
     async updatesearch(req: Request, res: Response) {
         const { slug } = req.params;
+        req.body.updatedAt = Date.now();
         Search.findOneAndUpdate({ slug }, req.body, { new: true }).then((search)=>{
             res.json({data: search})
         });
@@ -65,6 +64,7 @@ class SearchRouter {
         this.router.get('/search/:slug', this.getsearch);
         this.router.patch('/search/:slug', this.updatesearch);
         this.router.delete('/search/:slug', this.deletesearch);
+        this.router.get('/getProductsML',this.executeSearch);
     }
 }
 
