@@ -6,6 +6,7 @@ const SearchesSchema = new Schema({
     productString: { type: String, required: true },
     frequency: { type: Number, required: true },
     active: { type: Boolean, required: true, default: true },
+    createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 })
 

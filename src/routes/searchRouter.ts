@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Request, Response, Router } from 'express';
 import { environment } from '../environments/environment';
 import Search from '../models/Search';
+import products from '../models/Products';
 import { ProductMercadoLibre } from '../models/product-mercado-libre';
 
 class SearchRouter {
@@ -51,10 +52,18 @@ class SearchRouter {
     }
 
     async deletesearch(req: Request, res: Response) {
-        Search.findOneAndDelete({slug: req.params.slug}).then((response)=>{
-            res.json({
-                res: response
+        products.deleteMany({productSlug:  req.params.slug}).then(()=>{
+            Search.findOneAndDelete({slug: req.params.slug}).then((response)=>{
+                res.json({
+                    res: response
+                });
             });
+        });
+    }
+
+    async getproducts(req: Request, res: Response) {    
+        products.find().then((searches)=>{
+            res.json(searches);
         });
     }
 
@@ -65,6 +74,7 @@ class SearchRouter {
         this.router.patch('/search/:slug', this.updatesearch);
         this.router.delete('/search/:slug', this.deletesearch);
         this.router.get('/getProductsML',this.executeSearch);
+        this.router.get('/products',this.getproducts);
     }
 }
 
