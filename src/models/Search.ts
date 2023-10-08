@@ -7,7 +7,9 @@ const SearchesSchema = new Schema({
     frequency: { type: Number, required: true },
     active: { type: Boolean, required: true, default: true },
     createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    updatedAt: { type: Date, default: Date.now },
+    copys: { type: Number, required: true },
+    specialty: { type: Number, required: true },
 })
 
 export default model('Searches', SearchesSchema)

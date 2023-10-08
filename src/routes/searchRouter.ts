@@ -26,8 +26,8 @@ class SearchRouter {
     }
 
     async createSearch(req: Request, res: Response) {        
-        const { title, slug, productString, frequency } = req.body;
-        const newsearch = new Search({ title, slug, productString, frequency });
+        const { title, slug, productString, frequency , copys, specialty } = req.body;
+        const newsearch = new Search({ title, slug, productString, frequency, copys, specialty });
         await newsearch.save();
         res.json({ data: newsearch })
     }
