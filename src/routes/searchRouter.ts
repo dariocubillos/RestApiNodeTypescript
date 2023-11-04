@@ -4,6 +4,7 @@ import { environment } from '../environments/environment';
 import Search from '../models/Search';
 import products from '../models/Products';
 import { ProductMercadoLibre } from '../models/product-mercado-libre';
+import Reservation from '../models/Reservation';
 
 class SearchRouter {
     router: Router;
@@ -67,6 +68,38 @@ class SearchRouter {
         });
     }
 
+    async getReservations(req: Request, res: Response) {    
+        Reservation.find().then((searches)=>{
+            res.json(searches);
+        });
+    }
+
+    async updateReservation(req: Request, res: Response) {        
+        const { slug } = req.params;
+        req.body.updatedAt = Date.now();
+        Reservation.findOneAndUpdate({ slug }, req.body, { new: true }).then((search)=>{
+            res.json({data: search})
+        });
+    }
+
+    async createReservation(req: Request, res: Response) {
+        console.log(req.body);
+        const { name, slug, specialty, email, controlNumber, telephone, productSlug } = req.body;
+        const newReservation = new Reservation({ name, slug, specialty, email, controlNumber, telephone, productSlug });
+        await newReservation.save();
+        res.json({ data: newReservation })
+    }
+
+    async deleteReservation(req: Request, res: Response) {
+        Reservation.deleteMany({slug:  req.params.slug}).then(()=>{
+            Search.findOneAndDelete({slug: req.params.slug}).then((response)=>{
+                res.json({
+                    res: response
+                });
+            });
+        });
+    }
+
     routes() {
         this.router.post('/createSearch', this.createSearch);
         this.router.get('/searches', this.getsearches);
@@ -75,6 +108,10 @@ class SearchRouter {
         this.router.delete('/search/:slug', this.deletesearch);
         this.router.get('/getProductsML',this.executeSearch);
         this.router.get('/products',this.getproducts);
+        this.router.get('/reservations', this.getReservations)
+        this.router.post('/reservation', this.createReservation);
+        this.router.patch('/reservation/:slug', this.updatesearch);
+        this.router.delete('/reservation/:slug', this.deletesearch);
     }
 }
 
