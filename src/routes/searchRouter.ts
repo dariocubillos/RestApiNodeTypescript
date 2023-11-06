@@ -52,6 +52,24 @@ class SearchRouter {
         });
     }
 
+    async updateRemoveQtyBook(req: Request, res: Response) {
+      Search.findOne({slug: req.params.productSlug}).then(async (search)=>{
+        let updateSearch = {data: search};
+        await Search.findOneAndUpdate({slug: req.params.productSlug}, {copys: updateSearch.data!.copys - 1}, { new: true }).then((search)=>{
+            res.json({data: search})
+        });
+      });     
+    }
+
+    async updateAddQtyBook(req: Request, res: Response) {
+      Search.findOne({slug: req.params.productSlug}).then(async (search)=>{
+        let updateSearch = {data: search};
+        await Search.findOneAndUpdate({slug: req.params.productSlug}, {copys: updateSearch.data!.copys + 1}, { new: true }).then((search)=>{
+            res.json({data: search})
+        });
+      });     
+    }
+
     async deletesearch(req: Request, res: Response) {
         products.deleteMany({productSlug:  req.params.slug}).then(()=>{
             Search.findOneAndDelete({slug: req.params.slug}).then((response)=>{
@@ -83,7 +101,6 @@ class SearchRouter {
     }
 
     async createReservation(req: Request, res: Response) {
-        console.log(req.body);
         const { name, slug, specialty, email, controlNumber, telephone, productSlug } = req.body;
         const newReservation = new Reservation({ name, slug, specialty, email, controlNumber, telephone, productSlug });
         await newReservation.save();
@@ -110,8 +127,10 @@ class SearchRouter {
         this.router.get('/products',this.getproducts);
         this.router.get('/reservations', this.getReservations)
         this.router.post('/reservation', this.createReservation);
-        this.router.patch('/reservation/:slug', this.updatesearch);
-        this.router.delete('/reservation/:slug', this.deletesearch);
+        this.router.patch('/reservation/:slug', this.updateReservation);
+        this.router.delete('/reservation/:slug', this.deleteReservation);
+        this.router.patch('/reservationminus/:productSlug', this.updateRemoveQtyBook);
+        this.router.patch('/reservationplus/:productSlug', this.updateAddQtyBook);
     }
 }
 
